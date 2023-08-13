@@ -13,8 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.os.Parcelable;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Donate extends AppCompatActivity {
 
@@ -24,6 +27,8 @@ public class Donate extends AppCompatActivity {
     private ImageView imageView;
     private Uri imageUri;
     private Spinner typeSpinner;
+
+    private List<DonationEntries> donationEntriesList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,16 @@ public class Donate extends AppCompatActivity {
                 submitData();
             }
         });
+
+        Button swapButton = findViewById(R.id.swapButton);
+        swapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent swapIntent = new Intent(Donate.this, Swap.class);
+                swapIntent.putParcelableArrayListExtra("donationEntriesList", new ArrayList<>(donationEntriesList));
+                startActivity(swapIntent);
+            }
+        });
     }
 
     private void openImagePicker() {
@@ -69,14 +84,13 @@ public class Donate extends AppCompatActivity {
         int quantity = Integer.parseInt(quantityInput.getText().toString());
         String clothingType = typeSpinner.getSelectedItem().toString();
 
-        // Create an intent to pass data to the Swap page
-        Intent intent = new Intent(Donate.this, Swap.class);
-        intent.putExtra("title", title);
-        intent.putExtra("quantity", quantity);
-        intent.putExtra("clothingType", clothingType);
-        intent.putExtra("imageUri", imageUri.toString()); // Pass the image URI as a string
+        DonationEntries donationEntry = new DonationEntries(title, quantity, clothingType, imageUri); // Use the selected imageUri
+        donationEntriesList.add(donationEntry);
 
-        startActivity(intent);
+        // Clear input fields after submission
+        titleEditText.setText("");
+        quantityInput.setText("");
+        imageView.setImageResource(R.drawable.ic_launcher_foreground);
     }
 
     @Override
