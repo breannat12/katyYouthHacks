@@ -1,8 +1,10 @@
 package com.example.katyyouthhacks;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,11 +20,8 @@ public class Swap extends AppCompatActivity {
         setContentView(R.layout.activity_swap2);
 
         LinearLayout entriesLayout = findViewById(R.id.entriesLayout);
-
-        // Retrieve the list of DonationEntries passed from the Donate page
         ArrayList<DonationEntries> donationEntriesList = getIntent().getParcelableArrayListExtra("donationEntriesList");
 
-        // Loop through the list and populate the UI with each entry
         for (DonationEntries entry : donationEntriesList) {
             View entryView = LayoutInflater.from(this).inflate(R.layout.entry_layout, entriesLayout, false);
             TextView entryInfoTextView = entryView.findViewById(R.id.entryInfoTextView);
@@ -37,6 +36,18 @@ public class Swap extends AppCompatActivity {
             if (imageUri != null) {
                 entryImageView.setImageURI(imageUri);
             }
+
+            Button claimButton = entryView.findViewById(R.id.claimBtn);
+
+            // Set OnClickListener for the claim button
+            claimButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Change the background color of the parent entry layout
+                    entryView.setBackgroundResource(R.drawable.claimed_bg);
+                    claimButton.setText("Claimed!");
+                }
+            });
 
             // Add the entry layout to the entriesLayout
             entriesLayout.addView(entryView);

@@ -27,4 +27,12 @@
         android:scaleType="centerCrop"
         app:layout_constraintTop_toBottomOf="@id/entryInfoTextView" />
 
+    <Button
+        android:id="@+id/claimBtn"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTint="#009688"
+        android:text="Claim" />
+
 </LinearLayout>
