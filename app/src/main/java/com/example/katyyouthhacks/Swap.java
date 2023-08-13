@@ -1,7 +1,10 @@
 package com.example.katyyouthhacks;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,9 +14,7 @@ public class Swap extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swap2);
 
-        // Find your TextView and ImageView in the Swap page layout
-        TextView swapInfoTextView = findViewById(R.id.swapInfoTextView);
-        ImageView swapImageView = findViewById(R.id.swapImageView);
+        LinearLayout entriesLayout = findViewById(R.id.entriesLayout);
 
         // Retrieve the data passed from the Donate page
         String title = getIntent().getStringExtra("title");
@@ -21,16 +22,22 @@ public class Swap extends AppCompatActivity {
         String clothingType = getIntent().getStringExtra("clothingType");
         String imageUriString = getIntent().getStringExtra("imageUri");
 
-        // Display the received data in the TextView
-        String swapInfo = "Donated Item:\nTitle: " + title +
+        // Inflate the entry layout and populate it with data
+        View entryView = LayoutInflater.from(this).inflate(R.layout.entry_layout, entriesLayout, false);
+        TextView entryInfoTextView = entryView.findViewById(R.id.entryInfoTextView);
+        ImageView entryImageView = entryView.findViewById(R.id.entryImageView);
+
+        String entryInfo = "Donated Item:\nTitle: " + title +
                 "\nQuantity: " + quantity +
                 "\nClothing Type: " + clothingType;
-        swapInfoTextView.setText(swapInfo);
+        entryInfoTextView.setText(entryInfo);
 
-        // Load the image into the ImageView
         if (imageUriString != null) {
             Uri imageUri = Uri.parse(imageUriString);
-            swapImageView.setImageURI(imageUri);
+            entryImageView.setImageURI(imageUri);
         }
+
+        // Add the entry layout to the entriesLayout
+        entriesLayout.addView(entryView);
     }
 }
