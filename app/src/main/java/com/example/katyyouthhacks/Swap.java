@@ -14,43 +14,113 @@ import java.util.ArrayList;
 
 public class Swap extends AppCompatActivity {
 
+    private LinearLayout entriesLayout;
+    private ArrayList<DonationEntries> donationEntriesList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swap2);
 
-        LinearLayout entriesLayout = findViewById(R.id.entriesLayout);
-        ArrayList<DonationEntries> donationEntriesList = getIntent().getParcelableArrayListExtra("donationEntriesList");
+        entriesLayout = findViewById(R.id.entriesLayout);
+        donationEntriesList = getIntent().getParcelableArrayListExtra("donationEntriesList");
+
+        // Initially, show all items
+        displayFilteredItems(null);
+
+        Button allBtn = findViewById(R.id.allBtn);
+        Button shirtBtn = findViewById(R.id.shirtBtn);
+        Button pantBtn = findViewById(R.id.pantBtn);
+        Button jacketBtn = findViewById(R.id.jacketBtn);
+        Button denimBtn = findViewById(R.id.denimBtn);
+        Button shoeBtn = findViewById(R.id.shoeBtn);
+        Button accBtn = findViewById(R.id.accBtn);
+
+        // Set OnClickListener for each button
+        allBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayFilteredItems(null); // Show all items
+            }
+        });
+
+        shirtBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayFilteredItems("Shirts");
+            }
+        });
+
+        pantBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayFilteredItems("Pants");
+            }
+        });
+
+        jacketBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayFilteredItems("Jackets");
+            }
+        });
+
+        denimBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayFilteredItems("Denim");
+            }
+        });
+
+        shoeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayFilteredItems("Shoes");
+            }
+        });
+
+        accBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayFilteredItems("Accessories");
+            }
+        });
+    }
+
+    private void displayFilteredItems(String clothingType) {
+        entriesLayout.removeAllViews();
 
         for (DonationEntries entry : donationEntriesList) {
-            View entryView = LayoutInflater.from(this).inflate(R.layout.entry_layout, entriesLayout, false);
-            TextView entryInfoTextView = entryView.findViewById(R.id.entryInfoTextView);
-            ImageView entryImageView = entryView.findViewById(R.id.entryImageView);
+            if (clothingType == null || entry.getClothingType().equals(clothingType)) {
+                View entryView = LayoutInflater.from(this).inflate(R.layout.entry_layout, entriesLayout, false);
+                TextView entryInfoTextView = entryView.findViewById(R.id.entryInfoTextView);
+                ImageView entryImageView = entryView.findViewById(R.id.entryImageView);
 
-            String entryInfo = "Title: " + entry.getTitle() +
-                    "\nQuantity: " + entry.getQuantity() +
-                    "\nClothing Type: " + entry.getClothingType();
-            entryInfoTextView.setText(entryInfo);
+                String entryInfo = "Title: " + entry.getTitle() +
+                        "\nQuantity: " + entry.getQuantity() +
+                        "\nClothing Type: " + entry.getClothingType();
+                entryInfoTextView.setText(entryInfo);
 
-            Uri imageUri = entry.getImageUri();
-            if (imageUri != null) {
-                entryImageView.setImageURI(imageUri);
-            }
-
-            Button claimButton = entryView.findViewById(R.id.claimBtn);
-
-            // Set OnClickListener for the claim button
-            claimButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Change the background color of the parent entry layout
-                    entryView.setBackgroundResource(R.drawable.claimed_bg);
-                    claimButton.setText("Claimed!");
+                Uri imageUri = entry.getImageUri();
+                if (imageUri != null) {
+                    entryImageView.setImageURI(imageUri);
                 }
-            });
 
-            // Add the entry layout to the entriesLayout
-            entriesLayout.addView(entryView);
+                Button claimButton = entryView.findViewById(R.id.claimBtn);
+
+                // Set OnClickListener for the claim button
+                claimButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Change the background color of the parent entry layout
+                        entryView.setBackgroundResource(R.drawable.claimed_bg);
+                        claimButton.setText("Claimed!");
+                    }
+                });
+
+                // Add the entry layout to the entriesLayout
+                entriesLayout.addView(entryView);
+            }
         }
     }
 }
